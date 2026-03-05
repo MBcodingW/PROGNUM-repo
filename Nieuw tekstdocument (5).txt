@@ -1,0 +1,48 @@
+To make your 1D Histogram + PDF plot look exactly like the image you provided, there are three specific adjustments needed:
+
+PDF Line Styles: The image shows X(PDF) as a thick, dotted line (using a short-dashed pattern) and Y(PDF) as a thick, solid line. Your current code sets both to ls='--' (dashed).
+
+Legend: The labels and line markers in the legend must match the visual style (dotted vs. solid).
+
+PDF Weight: The X(PDF) line needs to be clearly distinct from Y(PDF).
+
+Here is the corrected code for the first plot.
+
+Corrected 1D Plot
+Python
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+
+# Data
+X = np.random.normal(0, 1, 100000)
+Y = np.random.normal(2, 1, 100000)
+
+plt.figure(figsize=(8, 5))
+
+# 1. Histograms (Keep your current setup)
+plt.hist(X, bins=50, density=True, color='blue', alpha=0.4, label='X', edgecolor='black')
+plt.hist(Y, bins=50, density=True, color='red', alpha=0.4, label='Y', edgecolor='black')
+
+# 2. PDF Lines - FIXED TO MATCH IMAGE
+# X(PDF): Thick dotted line (using ':' or custom dash-offset)
+plt.plot(x_range, norm.pdf(x_range, 0, 1), color='black', lw=4, ls=':', label='X(PDF)')
+# Y(PDF): Thick solid line
+plt.plot(x_range, norm.pdf(x_range, 2, 1), color='black', lw=4, ls='-', label='Y(PDF)')
+
+# 3. Annotations
+plt.annotate(r'$\mathcal{N}(0,1)$', xy=(0, 0.15), xytext=(-5, 0.15),
+             arrowprops=dict(facecolor='blue', shrink=0.05), color='blue', fontsize=12)
+plt.annotate(r'$\mathcal{N}(2,1)$', xy=(2, 0.15), xytext=(7, 0.15),
+             arrowprops=dict(facecolor='red', shrink=0.05), color='red', fontsize=12, ha='right')
+
+# 4. Styling
+plt.grid(True, axis='y', ls='--', color='grey', alpha=0.7)
+plt.xlim(-6, 8)
+plt.ylim(0, 0.42)
+plt.xticks(np.arange(-6, 9, 1))
+plt.xlabel("Values")
+plt.ylabel("Probability Density")
+plt.title("1D Histogram + PDF")
+plt.legend()
+plt.show()
